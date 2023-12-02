@@ -3,6 +3,7 @@ package com.example.aeon.presentation.fragment.payment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.contentValuesOf
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -16,11 +17,24 @@ class PaymentAdapter : ListAdapter<Payment, PaymentAdapter.ItemHolder>(ItemCompa
         private val binding = ItemPaymentBinding.bind(view)
 
         fun setData(payment: Payment) = with(binding) {
-            tvId.text = payment.id
-            tvTitle.text = payment.title
-            tvAmount.text = payment.amount
-            tvCreated.text = payment.created
+            tvId.text = "id: ${payment.id}"
+            tvTitle.text = "title: ${payment.title}"
+
+            if (payment.amount.isNullOrEmpty()) {
+                tvAmount.visibility = View.GONE
+            } else {
+                tvAmount.text = "amount: ${payment.amount}"
+                tvAmount.visibility = View.VISIBLE
+            }
+
+            if (payment.created.isNullOrEmpty() || payment.created == "null") {
+                tvCreated.visibility = View.GONE
+            } else {
+                tvCreated.text = "created: ${payment.created}"
+                tvCreated.visibility = View.VISIBLE
+            }
         }
+
 
         companion object {
             fun create(parent: ViewGroup): ItemHolder {

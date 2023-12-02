@@ -5,14 +5,19 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.annotation.NonNull
 import androidx.core.os.bundleOf
+import androidx.fragment.app.FragmentManager.BackStackEntry
 import androidx.fragment.app.viewModels
+import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import com.example.aeon.R
 import com.example.aeon.databinding.FragmentAuthorizationBinding
 import com.example.aeon.domain.models.auth.Credential
 import com.example.aeon.domain.models.payment.Payment
 import dagger.hilt.android.AndroidEntryPoint
+import org.jetbrains.annotations.NotNull
 
 @AndroidEntryPoint
 class AuthorizationFragment : Fragment() {
@@ -32,8 +37,10 @@ class AuthorizationFragment : Fragment() {
         onClickSignIn()
     }
 
-    private fun getToken() {
-        authorizationViewModel.getAuthToken(getCredential())
+    private fun getToken(credential: Credential) {
+        if(credential.login == "demo" && credential.password == "12345") {
+            authorizationViewModel.getAuthToken(credential)
+        } else Toast.makeText(requireContext(), "User not found", Toast.LENGTH_SHORT).show()
     }
 
     private fun getList() {
@@ -42,10 +49,9 @@ class AuthorizationFragment : Fragment() {
         }
     }
 
-
     private fun onClickSignIn() {
         binding.buttonSignIn.setOnClickListener {
-            getToken()
+            getToken(getCredential())
             getList()
         }
     }
@@ -60,6 +66,7 @@ class AuthorizationFragment : Fragment() {
     private fun navigate(paymentList: List<Payment>) {
         val navController = findNavController()
         val bundle = bundleOf("paymentList" to paymentList)
+        navController.popBackStack(R.id.authorizationFragment, true)
         navController.navigate(R.id.paymentFragment, bundle)
     }
 }

@@ -31,4 +31,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <ImageButton
+        android:id="@+id/buttonSignOut"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="172dp"
+        android:src="@drawable/baseline_logout"
+        app:layout_constraintBottom_toBottomOf="@+id/tvHead"
+        app:layout_constraintStart_toEndOf="@+id/tvHead"
+        app:layout_constraintTop_toTopOf="@+id/tvHead"
+        app:layout_constraintVertical_bias="1.0" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

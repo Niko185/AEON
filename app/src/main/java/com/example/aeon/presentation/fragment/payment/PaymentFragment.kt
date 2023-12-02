@@ -5,6 +5,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
+import com.example.aeon.R
 import com.example.aeon.databinding.FragmentPaymentBinding
 import com.example.aeon.domain.models.payment.Payment
 import dagger.hilt.android.AndroidEntryPoint
@@ -26,6 +28,7 @@ class PaymentFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initRecyclerView()
         getList()
+        signOut()
     }
 
     private fun initRecyclerView() = with(binding)  {
@@ -37,6 +40,14 @@ class PaymentFragment : Fragment() {
        arguments?.getSerializable("paymentList")?.let {
             val list = it as List<Payment>
             paymentAdapter.submitList(list)
+        }
+    }
+
+    private fun signOut() {
+        binding.buttonSignOut.setOnClickListener {
+            val navController = findNavController()
+            navController.popBackStack(R.id.paymentFragment, true)
+            navController.navigate(R.id.authorizationFragment)
         }
     }
 }
