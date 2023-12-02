@@ -15,7 +15,7 @@ data class PaymentResultDto(
             Payment(
                 id = it.id.toString(),
                 title = it.title,
-                amount = it.toString(),
+                amount = it.amount,
                 created = it.created.toString()
             )
         }

@@ -5,16 +5,19 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
+import com.example.aeon.R
 import com.example.aeon.databinding.FragmentAuthorizationBinding
 import com.example.aeon.domain.models.auth.Credential
+import com.example.aeon.domain.models.payment.Payment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class AuthorizationFragment : Fragment() {
     private lateinit var binding: FragmentAuthorizationBinding
     private val authorizationViewModel: AuthorizationViewModel by viewModels()
-    private val user = Credential(login = "demo", password = "12345")
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -26,28 +29,37 @@ class AuthorizationFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        getToken()
-        observerToken()
-        getListPay()
+        onClickSignIn()
     }
 
-    private fun getToken(){
-        binding.button.setOnClickListener {
-            authorizationViewModel.getAuthToken(user)
-        }
+    private fun getToken() {
+        authorizationViewModel.getAuthToken(getCredential())
     }
 
-    private fun getListPay(){
-        binding.button2.setOnClickListener {
-            authorizationViewModel.getPaymentList()
-        }
-    }
-
-    private fun observerToken() {
-        authorizationViewModel.token.observe(viewLifecycleOwner) {
-            println(it)
+    private fun getList() {
+        authorizationViewModel.paymentList.observe(viewLifecycleOwner) {
+            navigate(it)
         }
     }
 
 
+    private fun onClickSignIn() {
+        binding.buttonSignIn.setOnClickListener {
+            getToken()
+            getList()
+        }
+    }
+
+    private fun getCredential(): Credential {
+        return Credential(
+            login = binding.edLogin.text.toString(),
+            password = binding.edPassword.text.toString()
+        )
+    }
+
+    private fun navigate(paymentList: List<Payment>) {
+        val navController = findNavController()
+        val bundle = bundleOf("paymentList" to paymentList)
+        navController.navigate(R.id.paymentFragment, bundle)
+    }
 }
