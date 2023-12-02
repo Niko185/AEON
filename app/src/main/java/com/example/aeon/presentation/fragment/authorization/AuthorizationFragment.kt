@@ -27,11 +27,25 @@ class AuthorizationFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         getToken()
+        observerToken()
+        getListPay()
     }
 
     private fun getToken(){
         binding.button.setOnClickListener {
             authorizationViewModel.getAuthToken(user)
+        }
+    }
+
+    private fun getListPay(){
+        binding.button2.setOnClickListener {
+            authorizationViewModel.getPaymentList()
+        }
+    }
+
+    private fun observerToken() {
+        authorizationViewModel.token.observe(viewLifecycleOwner) {
+            println(it)
         }
     }
 
